@@ -13,4 +13,16 @@ public class PlayerFishing : MonoBehaviour
     {
 
     }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        // context area
+        if (other.CompareTag("ContextArea"))
+        {
+            Debug.Log("Player has entered a context area.");
+
+            // switch player state
+
+        }
+    }
 }
