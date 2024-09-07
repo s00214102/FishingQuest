@@ -6,7 +6,8 @@ namespace CMF
 {
 	//This script rotates a gameobject based on user input.
 	//Rotation around the x-axis (vertical) can be clamped/limited by setting 'upperVerticalLimit' and 'lowerVerticalLimit'.
-	public class CameraController : MonoBehaviour {
+	public class CameraController : MonoBehaviour
+	{
 
 		//Current rotation values (in degrees);
 		float currentXAngle = 0f;
@@ -42,19 +43,20 @@ namespace CMF
 		//References to transform and camera components;
 		protected Transform tr;
 		protected Camera cam;
-		protected CameraInput cameraInput;
+		protected InputHandler inputHandler;
 
 		//Setup references.
-		void Awake () {
+		void Awake()
+		{
 			tr = transform;
 			cam = GetComponent<Camera>();
-			cameraInput = GetComponent<CameraInput>();
+			inputHandler = InputHandler.Instance;
 
-			if(cameraInput == null)
-				Debug.LogWarning("No camera input script has been attached to this gameobject", this.gameObject);
+			if (inputHandler == null)
+				Debug.LogWarning("No InputHandler intance found.", this.gameObject);
 
 			//If no camera component has been attached to this gameobject, search the transform's children;
-			if(cam == null)
+			if (cam == null)
 				cam = GetComponentInChildren<Camera>();
 
 			//Set angle variables to current rotation angles of this transform;
@@ -70,7 +72,7 @@ namespace CMF
 		//This function is called right after Awake(); It can be overridden by inheriting scripts;
 		protected virtual void Setup()
 		{
-			
+
 		}
 
 		void Update()
@@ -82,24 +84,24 @@ namespace CMF
 		//This method can be overridden in classes derived from this base class to modify camera behaviour;
 		protected virtual void HandleCameraRotation()
 		{
-			if(cameraInput == null)
+			if (inputHandler == null)
 				return;
 
 			//Get input values;
-			float _inputHorizontal = cameraInput.GetHorizontalCameraInput();
-			float _inputVertical = cameraInput.GetVerticalCameraInput();
-		
+			float _inputHorizontal = inputHandler.GetHorizontalCameraInput();
+			float _inputVertical = inputHandler.GetVerticalCameraInput();
+
 			RotateCamera(_inputHorizontal, _inputVertical);
 		}
 
 		//Rotate camera; 
 		protected void RotateCamera(float _newHorizontalInput, float _newVerticalInput)
 		{
-			if(smoothCameraRotation)
+			if (smoothCameraRotation)
 			{
 				//Lerp input;
-				oldHorizontalInput = Mathf.Lerp (oldHorizontalInput, _newHorizontalInput, Time.deltaTime * cameraSmoothingFactor);
-				oldVerticalInput = Mathf.Lerp (oldVerticalInput, _newVerticalInput, Time.deltaTime * cameraSmoothingFactor);
+				oldHorizontalInput = Mathf.Lerp(oldHorizontalInput, _newHorizontalInput, Time.deltaTime * cameraSmoothingFactor);
+				oldVerticalInput = Mathf.Lerp(oldVerticalInput, _newVerticalInput, Time.deltaTime * cameraSmoothingFactor);
 			}
 			else
 			{
@@ -133,8 +135,8 @@ namespace CMF
 		//Set the camera's field-of-view (FOV);
 		public void SetFOV(float _fov)
 		{
-			if(cam)
-				cam.fieldOfView = _fov;	
+			if (cam)
+				cam.fieldOfView = _fov;
 		}
 
 		//Set x and y angle directly;
@@ -182,12 +184,12 @@ namespace CMF
 
 			//Calculate normalized direction;
 			float _angleDifferenceMagnitude = _angleDifference.magnitude;
-			if(_angleDifferenceMagnitude == 0f)
+			if (_angleDifferenceMagnitude == 0f)
 				return;
-			Vector2 _angleDifferenceDirection = _angleDifference/_angleDifferenceMagnitude;
+			Vector2 _angleDifferenceDirection = _angleDifference / _angleDifferenceMagnitude;
 
 			//Check for overshooting;
-			if(_lookSpeed * Time.deltaTime > _angleDifferenceMagnitude)
+			if (_lookSpeed * Time.deltaTime > _angleDifferenceMagnitude)
 			{
 				_currentAngles += _angleDifferenceDirection * _angleDifferenceMagnitude;
 			}
@@ -198,7 +200,7 @@ namespace CMF
 			currentYAngle = _currentAngles.y;
 			//Clamp vertical rotation;
 			currentXAngle = Mathf.Clamp(_currentAngles.x, -upperVerticalLimit, lowerVerticalLimit);
-			
+
 			UpdateRotation();
 		}
 
@@ -214,30 +216,30 @@ namespace CMF
 
 		//Returns the direction the camera is facing, without any vertical rotation;
 		//This vector should be used for movement-related purposes (e.g., moving forward);
-		public Vector3 GetFacingDirection ()
+		public Vector3 GetFacingDirection()
 		{
 			return facingDirection;
 		}
 
 		//Returns the 'forward' vector of this gameobject;
 		//This vector points in the direction the camera is "aiming" and could be used for instantiating projectiles or raycasts.
-		public Vector3 GetAimingDirection ()
+		public Vector3 GetAimingDirection()
 		{
 			return tr.forward;
 		}
 
 		// Returns the 'right' vector of this gameobject;
-		public Vector3 GetStrafeDirection ()
+		public Vector3 GetStrafeDirection()
 		{
 			return tr.right;
 		}
 
 		// Returns the 'up' vector of this gameobject;
-		public Vector3 GetUpDirection ()
+		public Vector3 GetUpDirection()
 		{
 			return upwardsDirection;
 		}
-		
-		
+
+
 	}
 }
