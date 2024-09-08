@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using CMF;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.UI;
@@ -19,9 +20,10 @@ public class PlayerController : BaseStateMachine
 
     Dictionary<PlayerState, BaseState> States = new Dictionary<PlayerState, BaseState>();
 
+    public AdvancedWalkerController walkerController;
     private void Awake()
     {
-
+        walkerController = GetComponent<AdvancedWalkerController>();
     }
 
     void Start()
@@ -30,13 +32,17 @@ public class PlayerController : BaseStateMachine
 
         InitiliazeStates();
 
-        SetState(0);
+        SetState(1);
     }
     private void Update()
     {
         CurrentImplimentation.Update();
     }
 
+    private void FixedUpdate()
+    {
+        CurrentImplimentation.FixedUpdate();
+    }
     private void InitiliazeStates()
     {
         States.Add(PlayerState.Idle, new Idle_State(this));

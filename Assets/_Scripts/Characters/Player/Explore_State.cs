@@ -23,6 +23,19 @@ public class Explore_State : BaseState
     public override void Update()
     {
         base.Update();
+        
+        _controller.walkerController.DoUpdate();
+        
+        if (InputHandler.Instance.btnEastTriggered)
+        {
+            _controller.SetState((int)PlayerState.Fishing);
+        }
     }
 
+    public override void FixedUpdate()
+    {
+        base.FixedUpdate();
+        
+        _controller.walkerController.DoFixedUpdate();
+    }
 }

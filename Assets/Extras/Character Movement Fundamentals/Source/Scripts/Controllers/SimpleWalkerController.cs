@@ -58,7 +58,7 @@ namespace CMF
             }
 
             //Handle jumping;
-            if ((inputHandler != null) && isGrounded && inputHandler.JumpTriggered)
+            if ((inputHandler != null) && isGrounded && inputHandler.btnSouthTriggered)
             {
                 OnJumpStart();
                 currentVerticalSpeed = jumpSpeed;

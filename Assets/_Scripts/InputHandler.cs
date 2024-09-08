@@ -3,31 +3,33 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Serialization;
 
 
 public class InputHandler : MonoBehaviour
 {
     [SerializeField] private InputActionAsset playerControls;
-
-    [SerializeField] private string actionMapName = "Explore";
-
+    private string exploreActionMapName = "Generic";
+    
+    // Analog sticks
     private InputAction moveAction;
     private InputAction lookAction;
-    private InputAction jumpAction;
-    private InputAction interactAction;
-    private InputAction toolAction;
-    private InputAction sprintAction;
-
     public Vector2 MoveInput { get; private set; }
     public Vector2 LookInput { get; private set; }
-    public bool JumpTriggered { get; private set; }
-    public bool InteractTriggered { get; private set; }
-    public float SprintValue { get; private set; }
+    
+    // Face buttons
+    private InputAction btnSouthAction;
+    private InputAction btnWestAction;
+    private InputAction btnEastAction;
+    private InputAction btnNorthAction;
+    public bool btnSouthTriggered { get; private set; }
+    public bool btnWestTriggered { get; private set; }
+    public bool btnEastTriggered { get; private set; }
+    public float btnNorthValue { get; private set; }
+    
 
     public float deadZoneThreshold = 0.2f;
-
     public static InputHandler Instance { get; private set; }
-
     private void Awake()
     {
         if (Instance == null)
@@ -39,16 +41,16 @@ public class InputHandler : MonoBehaviour
         {
             Destroy(gameObject);
         }
-
-        moveAction = playerControls.FindActionMap(actionMapName).FindAction("Move");
-        lookAction = playerControls.FindActionMap(actionMapName).FindAction("Look");
-        jumpAction = playerControls.FindActionMap(actionMapName).FindAction("Jump");
-        interactAction = playerControls.FindActionMap(actionMapName).FindAction("Interact");
-        toolAction = playerControls.FindActionMap(actionMapName).FindAction("Tool");
-        sprintAction = playerControls.FindActionMap(actionMapName).FindAction("Sprint");
+        
+        // Action map setup
+        moveAction = playerControls.FindActionMap(exploreActionMapName).FindAction("Move");
+        lookAction = playerControls.FindActionMap(exploreActionMapName).FindAction("Look");
+        btnSouthAction = playerControls.FindActionMap(exploreActionMapName).FindAction("BtnSouth");
+        btnWestAction = playerControls.FindActionMap(exploreActionMapName).FindAction("BtnWest");
+        btnEastAction = playerControls.FindActionMap(exploreActionMapName).FindAction("BtnEast");
+        btnNorthAction = playerControls.FindActionMap(exploreActionMapName).FindAction("BtnNorth");
         RegisterInputActions();
     }
-
     private void RegisterInputActions()
     {
         moveAction.performed += context => MoveInput = context.ReadValue<Vector2>();
@@ -57,106 +59,78 @@ public class InputHandler : MonoBehaviour
         lookAction.performed += context => LookInput = context.ReadValue<Vector2>();
         lookAction.canceled += context => LookInput = Vector2.zero;
 
-        jumpAction.performed += context => JumpTriggered = true;
-        jumpAction.canceled += context => JumpTriggered = false;
+        btnSouthAction.performed += context => btnSouthTriggered = true;
+        btnSouthAction.canceled += context => btnSouthTriggered = false;
 
-        interactAction.performed += context => InteractTriggered = true;
-        interactAction.canceled += context => InteractTriggered = false;
+        btnWestAction.performed += context => btnWestTriggered = true;
+        btnWestAction.canceled += context => btnWestTriggered = false;
+        
+        btnEastAction.performed += context => btnEastTriggered = true;
+        btnEastAction.canceled += context => btnEastTriggered = false;
 
-        sprintAction.performed += context => SprintValue = context.ReadValue<float>();
-        sprintAction.canceled += context => SprintValue = 0f;
+        btnNorthAction.performed += context => btnNorthValue = context.ReadValue<float>();
+        btnNorthAction.canceled += context => btnNorthValue = 0f;
     }
+    
+    #region InputAction methods
+    private float CalculateVector2Input(float input)
+    {
+        float _input = input;
 
+        // Apply dead zone logic first
+        if (Mathf.Abs(_input) < deadZoneThreshold)
+        {
+            _input = 0f;
+        }
+        else
+        {
+            // Apply Mathf.Sign after dead zone check
+            _input = Mathf.Sign(_input);
+        }
+
+        return _input;
+    }
     public float GetHorizontalMovementInput()
     {
-        float _input = MoveInput.x;
-
-        // Apply dead zone logic first
-        if (Mathf.Abs(_input) < deadZoneThreshold)
-        {
-            _input = 0f;
-        }
-        else
-        {
-            // Apply Mathf.Sign after dead zone check
-            _input = Mathf.Sign(_input);
-        }
-
-        Debug.Log($"Vertical movement input: {_input}");
-        return _input;
+        return CalculateVector2Input(MoveInput.x);
     }
-
     public float GetVerticalMovementInput()
     {
-        float _input = MoveInput.y;
-
-        // Apply dead zone logic first
-        if (Mathf.Abs(_input) < deadZoneThreshold)
-        {
-            _input = 0f;
-        }
-        else
-        {
-            // Apply Mathf.Sign after dead zone check
-            _input = Mathf.Sign(_input);
-        }
-
-        Debug.Log($"Vertical movement input: {_input}");
-        return _input;
+        return CalculateVector2Input(MoveInput.y);
     }
-
     public float GetHorizontalCameraInput()
     {
-        float _input = LookInput.x;
-
-        // Apply dead zone logic first
-        if (Mathf.Abs(_input) < deadZoneThreshold)
-        {
-            _input = 0f;
-        }
-        else
-        {
-            // Apply Mathf.Sign after dead zone check
-            _input = Mathf.Sign(_input);
-        }
-        Debug.Log($"Horizontal camera input: {_input}");
-        return _input;
+        return CalculateVector2Input(LookInput.x);
     }
-
     public float GetVerticalCameraInput()
     {
-        float _input = LookInput.y;
-
-        // Apply dead zone logic first
-        if (Mathf.Abs(_input) < deadZoneThreshold)
-        {
-            _input = 0f;
-        }
-        else
-        {
-            // Apply Mathf.Sign after dead zone check
-            _input = Mathf.Sign(_input);
-        }
-        Debug.Log($"Vertical camera input: {_input}");
-        return _input;
+        return CalculateVector2Input(LookInput.y);;
     }
+    
+    #endregion
+    
+    // make this an event that other dudes can sub to
+    // public bool ToolButtonPressed()
+    // {
+    //     return ToolTriggered;
+    // }
 
     private void OnEnable()
     {
         moveAction.Enable();
         lookAction.Enable();
-        jumpAction.Enable();
-        interactAction.Enable();
-        toolAction.Enable();
-        sprintAction.Enable();
+        btnSouthAction.Enable();
+        btnWestAction.Enable();
+        btnEastAction.Enable();
+        btnNorthAction.Enable();
     }
     private void OnDisable()
     {
         moveAction.Disable();
         lookAction.Disable();
-        jumpAction.Disable();
-        interactAction.Disable();
-        toolAction.Disable();
-        sprintAction.Disable();
+        btnSouthAction.Disable();
+        btnWestAction.Disable();
+        btnEastAction.Disable();
+        btnNorthAction.Disable();
     }
 }

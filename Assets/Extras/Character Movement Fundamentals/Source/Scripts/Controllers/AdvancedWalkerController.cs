@@ -97,7 +97,7 @@ namespace CMF
 		{
 		}
 
-		void Update()
+		public void DoUpdate()
 		{
 			HandleJumpKeyInput();
 		}
@@ -119,7 +119,7 @@ namespace CMF
 			jumpKeyIsPressed = _newJumpKeyPressedState;
 		}
 
-		void FixedUpdate()
+		public void DoFixedUpdate()
 		{
 			ControllerUpdate();
 		}
@@ -231,7 +231,7 @@ namespace CMF
 			if (inputHandler == null)
 				return false;
 
-			return inputHandler.JumpTriggered;
+			return inputHandler.btnSouthTriggered;
 		}
 
 		//Determine current controller state based on current momentum and whether the controller is grounded (or not);
