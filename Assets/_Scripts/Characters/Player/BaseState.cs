@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 public abstract class BaseState
 {
-    public BaseState(BaseStateMachine controller) { }
+    public BaseState(BaseStateMachine stateMachine) { }
 
     public virtual void Enter() { }
     public virtual void Update() { }

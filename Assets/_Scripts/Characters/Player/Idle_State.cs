@@ -4,11 +4,11 @@ using UnityEngine;
 
 public class Idle_State : BaseState
 {
-    PlayerController _controller;
+    PlayerStateMachine _stateMachine;
 
-    public Idle_State(PlayerController controller) : base(controller)
+    public Idle_State(PlayerStateMachine stateMachine) : base(stateMachine)
     {
-        _controller = controller;
+        _stateMachine = stateMachine;
     }
     public override void Enter()
     {

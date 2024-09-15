@@ -4,11 +4,11 @@ using UnityEngine;
 
 public class Dialogue_State : BaseState
 {
-    PlayerController _controller;
+    PlayerStateMachine _stateMachine;
 
-    public Dialogue_State(PlayerController controller) : base(controller)
+    public Dialogue_State(PlayerStateMachine stateMachine) : base(stateMachine)
     {
-        _controller = controller;
+        _stateMachine = stateMachine;
     }
 
     public override void Enter()

@@ -14,16 +14,18 @@ public enum PlayerState
     Fishing, // fishing
 }
 
-public class PlayerController : BaseStateMachine
+public class PlayerStateMachine : BaseStateMachine
 {
     public PlayerState CurrentState;
 
-    Dictionary<PlayerState, BaseState> States = new Dictionary<PlayerState, BaseState>();
+    Dictionary<PlayerState, BaseState> States = new();
 
-    public AdvancedWalkerController walkerController;
+    //public AdvancedWalkerController walkerController;
+    public SimplePlayerMovement movement;
     private void Awake()
     {
-        walkerController = GetComponent<AdvancedWalkerController>();
+        //walkerController = GetComponent<AdvancedWalkerController>();
+        movement = GetComponent<SimplePlayerMovement>();
     }
 
     void Start()

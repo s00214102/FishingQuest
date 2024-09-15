@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class GameManager : MonoBehaviour
 {
@@ -27,7 +28,7 @@ public class GameManager : MonoBehaviour
 
 	public GameState CurrentState { get; private set; }
 
-	public PlayerController playerController;
+	public PlayerStateMachine playerStateMachine;
 
 	void Start()
 	{
@@ -36,13 +37,13 @@ public class GameManager : MonoBehaviour
 
 	private void InitPlayer()
 	{
-		if (playerController != null)
+		if (playerStateMachine != null)
 		{
-			playerController.SetState((int)PlayerState.Explore);
+			playerStateMachine.SetState((int)PlayerState.Explore);
 		}
 		else
 		{
-			Debug.LogError("PlayerController reference is missing in GameManager.");
+			Debug.LogError("PlayerStateMachine reference is missing in GameManager.");
 		}
 	}
 }

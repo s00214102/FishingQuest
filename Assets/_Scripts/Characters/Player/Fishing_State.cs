@@ -4,11 +4,11 @@ using UnityEngine;
 
 public class Fishing_State : BaseState
 {
-    PlayerController _controller;
+    PlayerStateMachine _stateMachine;
 
-    public Fishing_State(PlayerController controller) : base(controller)
+    public Fishing_State(PlayerStateMachine stateMachine) : base(stateMachine)
     {
-        _controller = controller;
+        _stateMachine = stateMachine;
     }
 
     public override void Enter()

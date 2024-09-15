@@ -4,11 +4,11 @@ using UnityEngine;
 
 public class Explore_State : BaseState
 {
-    PlayerController _controller;
+    PlayerStateMachine _stateMachine;
 
-    public Explore_State(PlayerController controller) : base(controller)
+    public Explore_State(PlayerStateMachine stateMachine) : base(stateMachine)
     {
-        _controller = controller;
+        _stateMachine = stateMachine;
     }
     public override void Enter()
     {
@@ -24,11 +24,11 @@ public class Explore_State : BaseState
     {
         base.Update();
         
-        _controller.walkerController.DoUpdate();
+        _stateMachine.movement.DoUpdate();
         
         if (InputHandler.Instance.btnEastTriggered)
         {
-            _controller.SetState((int)PlayerState.Fishing);
+            _stateMachine.SetState((int)PlayerState.Fishing);
         }
     }
 
@@ -36,6 +36,6 @@ public class Explore_State : BaseState
     {
         base.FixedUpdate();
         
-        _controller.walkerController.DoFixedUpdate();
+        _stateMachine.movement.DoFixedUpdate();
     }
 }
