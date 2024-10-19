@@ -9,7 +9,7 @@ using UnityEngine.Serialization;
 public class InputHandler : MonoBehaviour
 {
     [SerializeField] private InputActionAsset playerControls;
-    private string exploreActionMapName = "Generic";
+    private string actionMapName = "Generic";
     
     // Analog sticks
     private InputAction moveAction;
@@ -43,12 +43,12 @@ public class InputHandler : MonoBehaviour
         }
         
         // Action map setup
-        moveAction = playerControls.FindActionMap(exploreActionMapName).FindAction("Move");
-        lookAction = playerControls.FindActionMap(exploreActionMapName).FindAction("Look");
-        btnSouthAction = playerControls.FindActionMap(exploreActionMapName).FindAction("BtnSouth");
-        btnWestAction = playerControls.FindActionMap(exploreActionMapName).FindAction("BtnWest");
-        btnEastAction = playerControls.FindActionMap(exploreActionMapName).FindAction("BtnEast");
-        btnNorthAction = playerControls.FindActionMap(exploreActionMapName).FindAction("BtnNorth");
+        moveAction = playerControls.FindActionMap(actionMapName).FindAction("Move");
+        lookAction = playerControls.FindActionMap(actionMapName).FindAction("Look");
+        btnSouthAction = playerControls.FindActionMap(actionMapName).FindAction("BtnSouth");
+        btnWestAction = playerControls.FindActionMap(actionMapName).FindAction("BtnWest");
+        btnEastAction = playerControls.FindActionMap(actionMapName).FindAction("BtnEast");
+        btnNorthAction = playerControls.FindActionMap(actionMapName).FindAction("BtnNorth");
         RegisterInputActions();
     }
     private void RegisterInputActions()
